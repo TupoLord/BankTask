@@ -67,40 +67,9 @@ async def add_custom(request: CustomNameRequest, response: Response, user: User 
     add_custom_bank(custom_name_eng, bank_name_rus, user.id)
     return JSONResponse(content={'result': 'The bank has been added!'})
 
+
 @app.post("/api/v1/bank-name/select", response_class=JSONResponse)
 async def select_custom(request: BankNameRequest, response: Response, user: User = Depends(current_user)):
     name = request.bank_name.lower()
     rez = return_custom_bank(name, user.id)
     return JSONResponse(content={'result': rez})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''@app.get("/ping", response_class=HTMLResponse)
-async def ping(response: Response):
-    response.status_code = 201
-    return "<html><body><h1>Hello, World!</h1></body></html>"'''
-
-
