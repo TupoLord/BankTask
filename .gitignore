@@ -163,7 +163,7 @@ cython_debug/
 
 response.py
 
-/.env
+.env
 
 .venv/
 
