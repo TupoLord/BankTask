@@ -8,7 +8,7 @@ from auth.database import User
 from auth.manager import get_user_manager
 from auth.schemas import UserRead, UserCreate
 from dictionary import dct, alf
-from Work_with_bd import add_custom_bank, select_bank, return_custom_bank
+from Work_with_bd import add_custom_bank, select_bank#, return_custom_bank
 
 
 class BankNameRequest(BaseModel):
@@ -53,7 +53,8 @@ async def translation_name(request: BankNameRequest, response: Response, user: U
     for i in request.bank_name:
         rez += dct[i]
     rez = rez.upper()
-    result = select_bank(rez)
+    name = request.bank_name.lower()
+    result = select_bank(rez, name, user.id)
     if len(result) > 0:
         return JSONResponse(content={'result': result})
     else:
@@ -66,10 +67,3 @@ async def add_custom(request: CustomNameRequest, response: Response, user: User 
     bank_name_rus = request.bank_name_rus.lower()
     add_custom_bank(custom_name_eng, bank_name_rus, user.id)
     return JSONResponse(content={'result': 'The bank has been added!'})
-
-
-@app.post("/api/v1/bank-name/select", response_class=JSONResponse)
-async def select_custom(request: BankNameRequest, response: Response, user: User = Depends(current_user)):
-    name = request.bank_name.lower()
-    rez = return_custom_bank(name, user.id)
-    return JSONResponse(content={'result': rez})
