@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import MetaData, Table, Integer, String, TIMESTAMP, Column, Boolean, JSON, ForeignKey
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref # Не используется
 
 metadata = MetaData()
 
@@ -46,7 +46,7 @@ custom = Table(
 )
 
 
-
+# PEP 8
 
 
 

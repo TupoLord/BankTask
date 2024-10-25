@@ -6,7 +6,7 @@ from fastapi_users import BaseUserManager, IntegerIDMixin, models, exceptions, s
 from auth.database import get_user_db, User
 from config import DB_SECRET
 
-SECRET = DB_SECRET
+SECRET = DB_SECRET # TODO Зачем?
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):

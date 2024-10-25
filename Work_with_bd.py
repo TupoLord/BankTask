@@ -1,11 +1,12 @@
+# Переименовать в db.py
+# Переписать на классы
 import psycopg2
 from config import DB_HOST, DB_NAME, DB_USER, DB_PASS
 
-list_banks_1 = []
 conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
 cursor = conn.cursor()
 
-def select_bank(name, custom_bank, id):
+def select_bank(name: str, custom_bank, id):
     cursor.execute("SELECT bank_name FROM bank WHERE bank_name LIKE %s", ('%' + name + '%',))
     rez = cursor.fetchall()
     cursor.execute("SELECT custom_name FROM custom WHERE bank_name LIKE %s AND user_id = %s", ('%' + custom_bank + '%', id))

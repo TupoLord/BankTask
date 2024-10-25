@@ -1,8 +1,9 @@
+# Обработка ошибок
+
 from fastapi import FastAPI, Response, Request, Depends
 from fastapi.responses import JSONResponse
 from fastapi_users import FastAPIUsers
 from pydantic import BaseModel, Field
-
 from auth.auth import auth_backend
 from auth.database import User
 from auth.manager import get_user_manager
@@ -18,11 +19,7 @@ class CustomNameRequest(BaseModel):
     bank_name_rus: str = Field(default='')
     custom_name_eng: str = Field(default='')
 
-
 app = FastAPI()
-
-
-
 
 fastapi_users = FastAPIUsers[User, int](
     get_user_manager,
@@ -44,6 +41,7 @@ app.include_router(
 current_user = fastapi_users.current_user()
 
 @app.post("/api/v1/bank-name/translate", response_class=JSONResponse)
+# Попробовать сделать exception_handler декоратор
 async def translation_name(request: BankNameRequest, response: Response, user: User = Depends(current_user)):
     rez = ''
     response.status_code = 404
