@@ -1,0 +1,7 @@
+alembic
+asyncpg
+fastapi[all]
+fastapi-users[sqlalchemy]
+python-dotenv
+sqlalchemy
+beautifulsoup4

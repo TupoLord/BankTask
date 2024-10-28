@@ -6,12 +6,11 @@ from fastapi_users import BaseUserManager, IntegerIDMixin, models, exceptions, s
 from auth.database import get_user_db, User
 from config import DB_SECRET
 
-SECRET = DB_SECRET # TODO Зачем?
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
-    reset_password_token_secret = SECRET
-    verification_token_secret = SECRET
+    reset_password_token_secret = DB_SECRET
+    verification_token_secret = DB_SECRET
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")

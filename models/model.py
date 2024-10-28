@@ -1,7 +1,5 @@
 from datetime import datetime
-
 from sqlalchemy import MetaData, Table, Integer, String, TIMESTAMP, Column, Boolean, JSON, ForeignKey
-from sqlalchemy.orm import relationship, backref # Не используется
 
 metadata = MetaData()
 
