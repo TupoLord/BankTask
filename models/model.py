@@ -42,10 +42,3 @@ custom = Table(
     Column("bank_name", String, nullable=False),
     Column("user_id", Integer, ForeignKey("user.id"))
 )
-
-
-# PEP 8
-
-
-
-

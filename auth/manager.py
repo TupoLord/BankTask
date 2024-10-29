@@ -1,8 +1,6 @@
 from typing import Optional
-
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, IntegerIDMixin, models, exceptions, schemas
-
 from auth.database import get_user_db, User
 from config import DB_SECRET
 

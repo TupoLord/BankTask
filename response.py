@@ -2,13 +2,15 @@ import requests
 from bs4 import BeautifulSoup
 import psycopg2
 from config import DB_HOST, DB_NAME, DB_USER, DB_PASS
+from constants import DB_URL
 
-def db_connect():
+
+def get_bank_names():
     list_banks = []
     conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
     cursor = conn.cursor()
 
-    url = 'https://bincheck.io/ru/RU' # Вынести в константы
+    url = DB_URL
 
     response = requests.get(url)
 
@@ -22,5 +24,3 @@ def db_connect():
     conn.commit()
     cursor.close()
     conn.close()
-
-

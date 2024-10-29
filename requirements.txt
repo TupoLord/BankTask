@@ -5,3 +5,4 @@ fastapi-users[sqlalchemy]
 python-dotenv
 sqlalchemy
 beautifulsoup4
+pcycopg2-binary

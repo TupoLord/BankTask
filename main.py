@@ -37,6 +37,7 @@ app.include_router(
 )
 
 current_user = fastapi_users.current_user()
+db = Database()
 
 @app.post("/api/v1/bank-name/translate", response_class=JSONResponse)
 async def get_bank(request: BankNameRequest, response: Response, user: User = Depends(current_user)):
@@ -50,7 +51,6 @@ async def get_bank(request: BankNameRequest, response: Response, user: User = De
             rez += dct[i]
         rez = rez.upper()
         name = request.bank_name.lower()
-        db = Database()
         bank_manager = BankManager(db)
         result = bank_manager.select_bank(rez, name, user.id)
         if len(result) > 0:
@@ -65,7 +65,6 @@ async def get_bank(request: BankNameRequest, response: Response, user: User = De
 async def add_bank(request: CustomNameRequest, user: User = Depends(current_user)):
     custom_name_eng = request.custom_name_eng.lower()
     bank_name_rus = request.bank_name_rus.lower()
-    db = Database()
     bank_manager = BankManager(db)
     bank_manager.add_custom_bank(custom_name_eng, bank_name_rus, user.id)
     return JSONResponse(content={'result': 'The bank has been added!'})
