@@ -161,7 +161,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
-proverim.py
+utils/proverim.py
 
 .env
 
@@ -170,6 +170,8 @@ proverim.py
 venv/
 
 alembic.ini
+
+.env-non-dev
 
 
 

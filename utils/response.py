@@ -1,14 +1,23 @@
 import requests
 from bs4 import BeautifulSoup
 import psycopg2
-from config import DB_HOST, DB_NAME, DB_USER, DB_PASS
-from constants import DB_URL
+from config.config import DB_HOST, DB_NAME, DB_USER, DB_PASS
+from utils.constants import DB_URL
+conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+cursor = conn.cursor()
+
+def check_banks():
+    cursor.execute("SELECT * FROM bank")
+    rez = cursor.fetchall()
+    if len(rez) == 0:
+        cursor.execute("TRUNCATE TABLE bank RESTART IDENTITY")
+        get_bank_names()
+    else:
+        pass
 
 
 def get_bank_names():
     list_banks = []
-    conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
-    cursor = conn.cursor()
 
     url = DB_URL
 
@@ -24,3 +33,5 @@ def get_bank_names():
     conn.commit()
     cursor.close()
     conn.close()
+
+check_banks()

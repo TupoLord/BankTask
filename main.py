@@ -7,7 +7,8 @@ from auth.database import User
 from auth.manager import get_user_manager
 from auth.schemas import UserRead, UserCreate
 from utils.dictionary import dct, alf
-from db import BankManager, Database
+from database.db import BankManager, Database
+import utils.response
 
 
 class BankNameRequest(BaseModel):
@@ -46,7 +47,7 @@ async def get_bank(request: BankNameRequest, response: Response, user: User = De
         response.status_code = 404
         for j in request.bank_name:
             if j in alf:
-                return response.status_code  # Проверка на наличие английских символов в названии
+                return response.status_code
         for i in request.bank_name:
             rez += dct[i]
         rez = rez.upper()

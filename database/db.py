@@ -1,5 +1,5 @@
 import psycopg2
-from config import DB_HOST, DB_NAME, DB_USER, DB_PASS
+from config.config import DB_HOST, DB_NAME, DB_USER, DB_PASS
 
 class Database:
     def __init__(self):
