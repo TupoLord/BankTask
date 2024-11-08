@@ -8,7 +8,7 @@ from auth.manager import get_user_manager
 from auth.schemas import UserRead, UserCreate
 from utils.dictionary import dct, alf
 from database.db import BankManager, Database
-import utils.response
+from utils.response import check_banks
 
 
 class BankNameRequest(BaseModel):
@@ -19,6 +19,7 @@ class CustomNameRequest(BaseModel):
     custom_name_eng: str = Field(default='')
 
 app = FastAPI()
+check_banks()
 
 fastapi_users = FastAPIUsers[User, int](
     get_user_manager,

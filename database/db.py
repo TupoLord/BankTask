@@ -1,39 +1,51 @@
-import psycopg2
+from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 from config.config import DB_HOST, DB_NAME, DB_USER, DB_PASS
+Base = declarative_base()
 
+class Bank(Base):
+    __tablename__ = 'bank'
+    id = Column(Integer, primary_key=True)
+    bank_name = Column(String)
+
+
+class Custom(Base):
+    __tablename__ = 'custom'
+    id = Column(Integer, primary_key=True)
+    custom_name = Column(String)
+    bank_name = Column(String, ForeignKey('bank.bank_name'))
+    user_id = Column(Integer)
+
+
+# Класс для работы с базой данных
 class Database:
     def __init__(self):
-        self.conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
-        self.cursor = self.conn.cursor()
+        self.engine = create_engine(f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}')
+        self.Session = sessionmaker(bind=self.engine)
+        self.session = self.Session()
 
     def close(self):
-        self.cursor.close()
-        self.conn.close()
+        self.session.close()
 
     def commit(self):
-        self.conn.commit()
+        self.session.commit()
 
-    def fetchall(self, query, params):
-        self.cursor.execute(query, params)
-        return self.cursor.fetchall()
-
-    def execute(self, query, params):
-        self.cursor.execute(query, params)
 
 class BankManager:
     def __init__(self, db: Database):
         self.db = db
 
     def select_bank(self, name: str, custom_bank: str, user_id: int):
-        query_banks = "SELECT bank_name FROM bank WHERE bank_name LIKE %s"
-        banks = self.db.fetchall(query_banks, ('%' + name + '%',))
+        banks = self.db.session.query(Bank.bank_name).filter(Bank.bank_name.ilike(f'%{name}%')).all()
+        customs = self.db.session.query(Custom.custom_name).filter(Custom.bank_name.ilike(f'%{custom_bank}%'),
+                                                                   Custom.user_id == user_id).all()
 
-        query_customs = "SELECT custom_name FROM custom WHERE bank_name LIKE %s AND user_id = %s"
-        customs = self.db.fetchall(query_customs, ('%' + custom_bank + '%', user_id))
-
-        return banks + customs
+        bank_names = [bank[0] for bank in banks]
+        custom_names = [custom[0] for custom in customs]
+        return bank_names + custom_names
 
     def add_custom_bank(self, custom_bank: str, name: str, user_id: int):
-        query = "INSERT INTO custom (custom_name, bank_name, user_id) VALUES (%s, %s, %s)"
-        self.db.execute(query, (custom_bank, name, user_id))
+        new_custom = Custom(custom_name=custom_bank, bank_name=name, user_id=user_id)
+        self.db.session.add(new_custom)
         self.db.commit()

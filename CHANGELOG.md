@@ -9,3 +9,6 @@
 
 0.3.1 File ordering
 6 NOV
+
+0.4.1 updated the database operations
+8 NOV
