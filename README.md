@@ -4,7 +4,8 @@
 git clone https://github.com/TupoLord/BankTask.git
 ```
 
-***В случае если при создании проекта у вас не активировано виртуальное окружение перейдите к пунктам 2-3, если виртуальное окружение создано и активировано то к пункту 4.***
+***В случае если при создании проекта у вас не активировано виртуальное окружение перейдите к пунктам 2-3, если
+виртуальное окружение создано и активировано то к пункту 4.***
 
 2. Создание виртуального окружения
 
@@ -13,16 +14,18 @@ python -m venv venv
 ```
 
 3. Активация виртуального окружения
-   + для MacOS/Linux
+    + для MacOS/Linux
     ```shell
     source venv/bin/activate
     ```
-   + для Windows
+    + для Windows
    ```shell
     venv\Scripts\activate
     ```
-    3. В случае если не проходит активация виртуального окружения через консоль в таком случае выполните следующую инструкцию:
-File->Settings->Project:project_name->Python interpreter->add interpreter->add local interpreter->virtualenv Environment->ok->apply
+    3.1. В случае если не проходит активация виртуального окружения через консоль в таком случае выполните следующую
+       инструкцию:
+       File->Settings->Project:project_name->Python interpreter->add interpreter->add local interpreter->virtualenv
+       Environment->ok->apply
 
 
 4. Установка зависимостей
