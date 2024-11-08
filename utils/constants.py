@@ -1,1 +1,1 @@
-DB_URL = 'https://bincheck.io/ru/RU'
+DB_URL = "https://bincheck.io/ru/RU"

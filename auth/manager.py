@@ -5,7 +5,6 @@ from auth.database import get_user_db, User
 from config.config import DB_SECRET
 
 
-
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     reset_password_token_secret = DB_SECRET
     verification_token_secret = DB_SECRET
@@ -14,10 +13,10 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         print(f"User {user.id} has registered.")
 
     async def create(
-            self,
-            user_create: schemas.UC,
-            safe: bool = False,
-            request: Optional[Request] = None,
+        self,
+        user_create: schemas.UC,
+        safe: bool = False,
+        request: Optional[Request] = None,
     ) -> models.UP:
         await self.validate_password(user_create.password, user_create)
 
