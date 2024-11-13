@@ -1,0 +1,14 @@
+[tool.black]
+line-length = 88
+skip-string-normalization = true
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.pytest_cache
+  | venv
+  | env
+  | migrations
+  | tests
+)/
+'''

@@ -1,14 +1,26 @@
 from datetime import datetime
-
-from sqlalchemy import MetaData, Table, Integer, String, TIMESTAMP, Column, Boolean, JSON, ForeignKey
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import (
+    MetaData,
+    Table,
+    Integer,
+    String,
+    TIMESTAMP,
+    Column,
+    Boolean,
+    JSON,
+    ForeignKey,
+)
 
 metadata = MetaData()
 
 bank = Table(
     "bank",
     metadata,
-    Column("id", Integer, primary_key=True,),
+    Column(
+        "id",
+        Integer,
+        primary_key=True,
+    ),
     Column("bank_name", String, nullable=False),
 )
 
@@ -39,15 +51,12 @@ user = Table(
 custom = Table(
     "custom",
     metadata,
-    Column("id", Integer, primary_key=True,),
+    Column(
+        "id",
+        Integer,
+        primary_key=True,
+    ),
     Column("custom_name", String, nullable=False),
     Column("bank_name", String, nullable=False),
-    Column("user_id", Integer, ForeignKey("user.id"))
+    Column("user_id", Integer, ForeignKey("user.id")),
 )
-
-
-
-
-
-
-
