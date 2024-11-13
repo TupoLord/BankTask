@@ -1,14 +1,20 @@
-0.1.0 Initial
-20 OCT
+# 0.1.0 Initial 2024-10-20
 
-0.2.0 Docker compose
-1 NOV
+* Первоначальная версия приложения
 
-0.3.0 Local Database
-3 NOV
+# 0.2.0 2024-11-01
 
-0.3.1 File ordering
-6 NOV
+* Добавлены Dockerfile и docker-compose
 
-0.4.1 updated the database operations
-8 NOV
+# 0.3.0 2024-11-03
+
+* Исправлена работа базы данных для корректной работы на локальной машине
+
+# 0.3.1 2024-11-06
+
+* Подкорректирован Dockerfile и docker-compose
+* Добавлен файл start.sh
+
+# 0.4.1 2024-11-08
+
+* Исправлены файлы response.py и db.py для работы с базой данных, используя sqlalchemy.orm
