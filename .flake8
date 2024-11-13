@@ -17,5 +17,5 @@ exclude =
 
 max-complexity = 10
 import-order-style = google
-application-import-names = my_project
+application-import-names = bank_task
 
