@@ -1,5 +1,7 @@
 from utils.logger import app_logger
+from fastapi import Request, FastAPI
 
+app = FastAPI()
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):

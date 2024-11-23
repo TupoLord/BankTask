@@ -1,3 +1,7 @@
+import logging
+from logging.handlers import RotatingFileHandler
+
+
 class AppLogger:
     def __init__(self, name, log_file='app.log'):
         self.logger = logging.getLogger(name)
