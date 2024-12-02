@@ -11,7 +11,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     verification_token_secret = DB_SECRET
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
-        app_logger.info(f"User {user.id} has registered.")
+        app_logger.info(f"Пользователь {user.id} зарегистрирован.")
 
     async def create(
             self,
@@ -24,7 +24,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
 
         if existing_user is not None:
             app_logger.warning(
-                f"User with email {user_create.email} already exists.")
+                f"Пользователь с таким email {user_create.email} уже существует.")
             raise exceptions.UserAlreadyExists()
 
         user_dict = (
@@ -38,8 +38,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         user_dict["role_id"] = 1
 
         created_user = await self.user_db.create(user_dict)
-        app_logger.info(f"User {created_user.id} has been created.")
-        await self.on_after_register(created_user, request)
+        app_logger.info(f"Пользователь {created_user.id} был создан.")
         return created_user
 
 

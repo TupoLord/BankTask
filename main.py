@@ -44,9 +44,8 @@ app.include_router(
 
 current_user = fastapi_users.current_user()
 db = Database()
-
-
 @app.post("/api/v1/bank-name/translate", response_class=JSONResponse)
+@log_requests
 async def get_bank(
     request: BankNameRequest, response: Response, user: User = Depends(current_user)
 ):
