@@ -1,29 +1,37 @@
 from fastapi import FastAPI, APIRouter
 from fastapi_users import FastAPIUsers
 from pydantic import BaseModel, Field
-from auth.auth import auth_backend
-from auth.database import User
-from auth.manager import get_user_manager
+from auth.auth import cookie_transport, get_jwt_strategy
+from models.model import user
+from auth.manager import get_user_manager, UserManager
 from database.db import Database
 from router import Router
 from utils.response import check_banks
+from sdk import SDK
+from config.config import Application_Config
+from fastapi_users.authentication import AuthenticationBackend
+
 
 
 # noinspection PyPropertyDefinition
 class App(object):
-    router = property(
-        fset=lambda self, value: self.register_routers(value.routes),
-    )
-    def __init__(self):
-        self.app = FastAPI()
-        self.fastapi_users = FastAPIUsers[User, int](
-            get_user_manager,
-            [auth_backend],
-        )
-        self.router = Router()
-        self.db = Database()
 
-    def set_router(self):
+    def __init__(self, fastapi_app: FastAPI):
+        self.app = fastapi_app
+        self.auth_backend = AuthenticationBackend(
+            name="jwt",
+            transport=cookie_transport,
+            get_strategy=lambda: get_jwt_strategy(self.conf.DB_SECRET)
+        )
+        self.fastapi_users = FastAPIUsers[user, int](
+            get_user_manager,
+            [self.auth_backend],
+        )
+        self.router = Router(self.auth_backend)
+        self.db = Database()
+        self.server = SDK()
+        self.conf = Application_Config()
+        self.manager = UserManager(self.conf)
 
     @staticmethod
     def _run_routines():

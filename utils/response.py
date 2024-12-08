@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from sqlalchemy import create_engine, Column, Integer, String, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from config.config import DB_HOST, DB_NAME, DB_USER, DB_PASS
+from server import app
 from utils.constants import DB_URL
 
 Base = declarative_base()
@@ -16,7 +16,7 @@ class Bank(Base):
     bank_name = Column(String)
 
 
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
+DATABASE_URL = f"postgresql://{app.conf.DB_USER}:{app.conf.DB_PASS}@{app.conf.DB_HOST}/{app.conf.DB_NAME}"
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 session = Session()

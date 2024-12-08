@@ -1,14 +1,15 @@
 from typing import Optional
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, IntegerIDMixin, models, exceptions, schemas
-from auth.database import get_user_db, User
-from config.config import DB_SECRET
+from auth.database import get_user_db
 from utils.logger import app_logger
+from models.model import User
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
-    reset_password_token_secret = DB_SECRET
-    verification_token_secret = DB_SECRET
+
+    reset_password_token_secret = app.conf.DB_SECRET
+    verification_token_secret = app.conf.DB_SECRET
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         app_logger.info(f"User {user.id} has registered.")

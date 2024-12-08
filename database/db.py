@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from config.config import DB_HOST, DB_NAME, DB_USER, DB_PASS
+from server import app
 
 Base = declarative_base()
 
@@ -24,7 +24,7 @@ class Custom(Base):
 class Database:
     def __init__(self):
         self.engine = create_engine(
-            f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
+            f"postgresql://{app.conf.DB_USER}:{app.conf.DB_PASS}@{app.conf.DB_HOST}/{app.conf.DB_NAME}"
         )
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
