@@ -1,9 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-from sqlalchemy import create_engine, Column, Integer, String, text
+from sqlalchemy import Column, Integer, String, text
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from server import app
 from utils.constants import DB_URL
 
 Base = declarative_base()
@@ -16,19 +14,13 @@ class Bank(Base):
     bank_name = Column(String)
 
 
-DATABASE_URL = f"postgresql://{app.conf.DB_USER}:{app.conf.DB_PASS}@{app.conf.DB_HOST}/{app.conf.DB_NAME}"
-engine = create_engine(DATABASE_URL)
-Session = sessionmaker(bind=engine)
-session = Session()
-
-
-def check_banks():
+def check_banks(session):
     if session.query(Bank).count() == 0:
         session.execute(text("ALTER SEQUENCE bank_id_seq RESTART WITH 1"))
-        get_bank_names()
+        get_bank_names(session)
 
 
-def get_bank_names():
+def get_bank_names(session):
     list_banks = []
     url = DB_URL
     headers = {

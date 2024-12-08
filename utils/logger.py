@@ -25,5 +25,3 @@ class AppLogger:
     def get_logger(self):
         return self.logger
 
-
-app_logger = AppLogger('bank_task').get_logger()

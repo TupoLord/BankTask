@@ -2,20 +2,22 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
-from server import app
+
+from config.config import Application_Config
 from models.model import metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
+conf = Application_Config()
 section = config.config_ini_section
-config.set_section_option(section, "DB_HOST", app.conf.DB_HOST)
-config.set_section_option(section, "DB_PORT", app.conf.DB_PORT)
-config.set_section_option(section, "DB_USER", app.conf.DB_USER)
-config.set_section_option(section, "DB_NAME", app.conf.DB_NAME)
-config.set_section_option(section, "DB_PASS", app.conf.DB_PASS)
-config.set_section_option(section, "DB_SECRET", app.conf.DB_SECRET)
+config.set_section_option(section, "DB_HOST", conf.DB_HOST)
+config.set_section_option(section, "DB_PORT", conf.DB_PORT)
+config.set_section_option(section, "DB_USER", conf.DB_USER)
+config.set_section_option(section, "DB_NAME", conf.DB_NAME)
+config.set_section_option(section, "DB_PASS", conf.DB_PASS)
+config.set_section_option(section, "DB_SECRET", conf.DB_SECRET)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

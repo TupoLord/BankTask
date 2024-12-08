@@ -1,18 +1,23 @@
 from typing import Optional
-from fastapi import Depends, Request
+from fastapi import Request
 from fastapi_users import BaseUserManager, IntegerIDMixin, models, exceptions, schemas
-from auth.database import get_user_db
-from utils.logger import app_logger
+from fastapi_users.db import BaseUserDatabase
+
+from config.config import Application_Config
 from models.model import User
+from utils.logger import AppLogger
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
 
-    reset_password_token_secret = app.conf.DB_SECRET
-    verification_token_secret = app.conf.DB_SECRET
+    def __init__(self, config: Application_Config):
+        super().__init__(BaseUserDatabase[models.UP, models.ID])
+        self.logger = AppLogger('bank_task_user_manager').get_logger()
+        self.reset_password_token_secret = config.DB_SECRET
+        self.verification_token_secret = config.DB_SECRET
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
-        app_logger.info(f"User {user.id} has registered.")
+        self.logger.info(f"User {user.id} has registered.")
 
     async def create(
             self,
@@ -24,7 +29,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         existing_user = await self.user_db.get_by_email(user_create.email)
 
         if existing_user is not None:
-            app_logger.warning(
+            self.logger.warning(
                 f"User with email {user_create.email} already exists.")
             raise exceptions.UserAlreadyExists()
 
@@ -39,10 +44,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         user_dict["role_id"] = 1
 
         created_user = await self.user_db.create(user_dict)
-        app_logger.info(f"User {created_user.id} has been created.")
+        self.logger.info(f"User {created_user.id} has been created.")
         await self.on_after_register(created_user, request)
         return created_user
 
-
-async def get_user_manager(user_db=Depends(get_user_db)):
-    yield UserManager(user_db)

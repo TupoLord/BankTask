@@ -1,7 +1,13 @@
+from typing import AsyncGenerator
+from fastapi import Depends
+from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from server import app
+from config.config import Application_Config
+from models.model import User
+from utils.logger import AppLogger
 
 Base = declarative_base()
 
@@ -22,12 +28,13 @@ class Custom(Base):
 
 # Класс для работы с базой данных
 class Database:
-    def __init__(self):
-        self.engine = create_engine(
-            f"postgresql://{app.conf.DB_USER}:{app.conf.DB_PASS}@{app.conf.DB_HOST}/{app.conf.DB_NAME}"
-        )
+    def __init__(self, config: Application_Config):
+        self.__connection_string = lambda conn_type: f"{conn_type}://{config.DB_USER}:{config.DB_PASS}@{config.DB_HOST}/{config.DB_NAME}"
+        self.engine = create_engine(self.__connection_string('postgresql'))
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
+        self.logger = AppLogger('bank_task_db').get_logger()
+
 
     def close(self):
         self.session.close()
