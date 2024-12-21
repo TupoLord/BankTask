@@ -1,6 +1,6 @@
-from config.config import Application_Config
-from database.db import Database
-from utils.logger import AppLogger
+from src.config.config import Application_Config
+from src.database.db import Database
+from src.utils.logger import AppLogger
 
 
 class BasicApp(object):

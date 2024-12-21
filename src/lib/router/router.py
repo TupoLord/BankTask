@@ -1,4 +1,4 @@
-from auth.schemas import UserRead, UserCreate
+from src.auth.schemas import UserRead, UserCreate
 
 
 class Router(object):

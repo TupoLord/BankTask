@@ -1,14 +1,14 @@
 from fastapi import FastAPI, APIRouter
 from fastapi_users import FastAPIUsers
-from auth.auth import cookie_transport, get_jwt_strategy
-from basic_app import BasicApp
-from models.model import User
-from auth.manager import UserManager
-from router import Router
-from sdk import SDK
-from utils.response import check_banks
+from src.auth.auth import cookie_transport, get_jwt_strategy
+from src.lib.core.basic_app import BasicApp
+from src.models.model import User
+from src.auth.manager import UserManager
+from src.lib.router.router import Router
+from src.common.sdk import SDK
+from src.utils.response import check_banks
 from fastapi_users.authentication import AuthenticationBackend
-from dependencies import get_user_manager
+from src.lib.generators.generators import get_user_manager
 
 class App(BasicApp):
 

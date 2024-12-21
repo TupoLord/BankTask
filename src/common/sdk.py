@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
-from models.model import User
-from utils.dictionary import dct, alf
-from database.db import BankManager
+from src.models.model import User
+from src.utils.dictionary import dct, alf
+from src.database.db import BankManager
 
 
 class BankNameRequest(BaseModel):

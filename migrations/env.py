@@ -3,8 +3,8 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
 
-from config.config import Application_Config
-from models.model import metadata
+from src.config.config import Application_Config
+from src.models.model import metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

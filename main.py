@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from m import App
+from src.server import App
 
 fastapi_app = FastAPI()
 

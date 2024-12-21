@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from config.config import Application_Config
-from utils.logger import AppLogger
+from src.config.config import Application_Config
+from src.utils.logger import AppLogger
 
 Base = declarative_base()
 

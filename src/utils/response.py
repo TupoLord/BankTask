@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from sqlalchemy import Column, Integer, String, text
 from sqlalchemy.ext.declarative import declarative_base
-from utils.constants import DB_URL
+from src.utils.constants import DB_URL
 
 Base = declarative_base()
 

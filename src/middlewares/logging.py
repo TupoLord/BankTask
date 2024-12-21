@@ -1,4 +1,4 @@
-from utils.logger import app_logger
+from src.utils.logger import app_logger
 from fastapi import Request, FastAPI
 
 app = FastAPI()
