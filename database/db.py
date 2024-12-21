@@ -1,12 +1,7 @@
-from typing import AsyncGenerator
-from fastapi import Depends
-from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from config.config import Application_Config
-from models.model import User
 from utils.logger import AppLogger
 
 Base = declarative_base()

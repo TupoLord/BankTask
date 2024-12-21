@@ -1,7 +1,7 @@
 from fastapi import FastAPI, APIRouter
 from fastapi_users import FastAPIUsers
 from auth.auth import cookie_transport, get_jwt_strategy
-from basic_app import BacisApp
+from basic_app import BasicApp
 from models.model import User
 from auth.manager import UserManager
 from router import Router
@@ -10,7 +10,7 @@ from utils.response import check_banks
 from fastapi_users.authentication import AuthenticationBackend
 from dependencies import get_user_manager
 
-class App(BacisApp):
+class App(BasicApp):
 
 	def __init__(self, fastapi_app: FastAPI):
 		super().__init__()
