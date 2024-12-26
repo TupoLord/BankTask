@@ -1,57 +1,61 @@
 from fastapi import FastAPI, APIRouter
 from fastapi_users import FastAPIUsers
+from fastapi_users.authentication import AuthenticationBackend
 from src.auth.auth import cookie_transport, get_jwt_strategy
 from src.lib.core.basic_app import BasicApp
+from src.lib.generators.generators import get_user_manager
 from src.models.model import User
-from src.auth.manager import UserManager
 from src.lib.router.router import Router
 from src.common.sdk import SDK
 from src.utils.response import check_banks
-from fastapi_users.authentication import AuthenticationBackend
 
 
 class App(BasicApp):
 
-	def __init__(self, fastapi_app: FastAPI):
-		super().__init__()
-		self.app = fastapi_app
-		self.auth_backend = AuthenticationBackend(
-			name="jwt",
-			transport=cookie_transport,
-			get_strategy=lambda: get_jwt_strategy(self.conf.DB_SECRET)
-		)
-		self.user_manager = UserManager(self.conf, )
+    def __init__(self, fastapi_app: FastAPI):
+        super().__init__()
+        self.app = fastapi_app
 
-		# Initialize FastAPIUsers with the standalone dependency function
-		self.fastapi_users = FastAPIUsers[User, int](
-			get_user_manager,  # Use the standalone function
-			[self.auth_backend],
-		)
-		self.router = Router(self.auth_backend)
-		self.server = SDK(
-			logger=self.logger,
-			db=self.db,
-			current_user_callback=self.get_current_user
-		)
-		self._run_routines()
+        self.auth_backend = AuthenticationBackend(
+            name="jwt",
+            transport=cookie_transport,
+            get_strategy=lambda: get_jwt_strategy(self.conf.DB_SECRET)
+        )
 
-	def _run_routines(self):
-		self.register_routers(self.router.get_routes(self.fastapi_users))
-		check_banks(self.db.session)
+        self.fastapi_users = FastAPIUsers[User, int](
+            get_user_manager,
+            [self.auth_backend],
+        )
 
-	def _include_router(self, entity: APIRouter, prefix: str, tags: list):
-		self.app.include_router(entity, prefix=prefix, tags=tags)
+        self.router = Router(self.auth_backend)
+        self.server = SDK(
+            logger=self.logger,
+            db=self.db,
+            current_user_callback=self.get_current_user
+        )
 
-	def register_routers(self, routers: tuple[tuple[APIRouter, str, list[str]], ...]):
-		for entity, prefix, tags in routers:
-			self._include_router(entity, prefix=prefix, tags=tags)
+        self._run_routines()
 
-	def get_current_user(self):
-		return self.fastapi_users.current_user()
+    def _run_routines(self):
+        self.register_routers(self.router.get_routes(self.fastapi_users))
+        check_banks(self.db.session)
+        self.register_routers((
+            (self.server.router, "/api/v1", ["sdk"]),
+        ))
 
-	def start(self):
-		self._run_routines()
+    def _include_router(self, entity: APIRouter, prefix: str, tags: list):
+        self.app.include_router(entity, prefix=prefix, tags=tags)
 
-	@property
-	def middlewares(self):
-		return self.app
+    def register_routers(self, routers: tuple[tuple[APIRouter, str, list[str]], ...]):
+        for entity, prefix, tags in routers:
+            self._include_router(entity, prefix=prefix, tags=tags)
+
+    def get_current_user(self):
+        return self.fastapi_users.current_user()
+
+    def start(self):
+        self._run_routines()
+
+    @property
+    def middlewares(self):
+        return self.app
