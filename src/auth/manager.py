@@ -2,7 +2,6 @@ from typing import Optional
 from fastapi import Request
 from fastapi_users import BaseUserManager, IntegerIDMixin, models, exceptions, schemas
 from fastapi_users.db import BaseUserDatabase
-
 from src.config.config import Application_Config
 from src.models.model import User
 from src.utils.logger import AppLogger
@@ -10,8 +9,8 @@ from src.utils.logger import AppLogger
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
 
-    def __init__(self, config: Application_Config):
-        super().__init__(BaseUserDatabase[models.UP, models.ID])
+    def __init__(self, config: Application_Config, user_db):
+        super().__init__(user_db)
         self.logger = AppLogger('bank_task_user_manager').get_logger()
         self.reset_password_token_secret = config.DB_SECRET
         self.verification_token_secret = config.DB_SECRET

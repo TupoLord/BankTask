@@ -8,3 +8,4 @@ def get_jwt_strategy(DB_SECRET: str) -> JWTStrategy:
     return JWTStrategy(secret=DB_SECRET, lifetime_seconds=3600)
 
 
+

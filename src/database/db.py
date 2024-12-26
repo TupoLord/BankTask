@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from src.config.config import Application_Config
 from src.utils.logger import AppLogger
@@ -28,7 +29,15 @@ class Database:
         self.engine = create_engine(self.__connection_string('postgresql'))
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
+
         self.logger = AppLogger('bank_task_db').get_logger()
+
+        self.async_engine = create_async_engine(self.__connection_string('postgresql+asyncpg'))
+        self.async_session = sessionmaker(bind=self.async_engine, class_=AsyncSession, expire_on_commit=False)
+
+    async def async_session(self):
+        async with self.async_session() as session:
+            yield session
 
 
     def close(self):
@@ -36,6 +45,12 @@ class Database:
 
     def commit(self):
         self.session.commit()
+
+    async def close_async_session(self):
+        self.async_session.close_all()
+
+    async def commit_async(self, session: AsyncSession):
+        await session.commit()
 
 
 class BankManager:
@@ -64,3 +79,4 @@ class BankManager:
         new_custom = Custom(custom_name=custom_bank, bank_name=name, user_id=user_id)
         self.db.session.add(new_custom)
         self.db.commit()
+

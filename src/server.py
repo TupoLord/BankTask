@@ -8,7 +8,7 @@ from src.lib.router.router import Router
 from src.common.sdk import SDK
 from src.utils.response import check_banks
 from fastapi_users.authentication import AuthenticationBackend
-from src.lib.generators.generators import get_user_manager
+
 
 class App(BasicApp):
 
@@ -20,7 +20,7 @@ class App(BasicApp):
 			transport=cookie_transport,
 			get_strategy=lambda: get_jwt_strategy(self.conf.DB_SECRET)
 		)
-		self.user_manager = UserManager(self.conf)
+		self.user_manager = UserManager(self.conf, )
 
 		# Initialize FastAPIUsers with the standalone dependency function
 		self.fastapi_users = FastAPIUsers[User, int](
