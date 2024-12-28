@@ -13,7 +13,6 @@ COPY . .
 
 EXPOSE 8000
 
+# Run deployment/start.sh
 
-RUN chmod +x /app/deployment/start.sh
-
-CMD ["deployment/start.sh"]
+CMD ["sh", "deployment/start.sh"]

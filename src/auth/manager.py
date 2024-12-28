@@ -1,27 +1,34 @@
 from typing import Optional
-from fastapi import Depends, Request
+from fastapi import Request
 from fastapi_users import BaseUserManager, IntegerIDMixin, models, exceptions, schemas
-from auth.database import get_user_db, User
-from config.config import DB_SECRET
+from src.config.config import Application_Config
+from src.models.model import User
+from src.utils.logger import AppLogger
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
-    reset_password_token_secret = DB_SECRET
-    verification_token_secret = DB_SECRET
+
+    def __init__(self, config: Application_Config, user_db):
+        super().__init__(user_db)
+        self.logger = AppLogger('bank_task_user_manager').get_logger()
+        self.reset_password_token_secret = config.DB_SECRET
+        self.verification_token_secret = config.DB_SECRET
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
-        print(f"User {user.id} has registered.")
+        self.logger.info(f"User {user.id} has registered.")
 
     async def create(
-        self,
-        user_create: schemas.UC,
-        safe: bool = False,
-        request: Optional[Request] = None,
+            self,
+            user_create: schemas.UC,
+            safe: bool = False,
+            request: Optional[Request] = None,
     ) -> models.UP:
         await self.validate_password(user_create.password, user_create)
-
         existing_user = await self.user_db.get_by_email(user_create.email)
+
         if existing_user is not None:
+            self.logger.warning(
+                f"User with email {user_create.email} already exists.")
             raise exceptions.UserAlreadyExists()
 
         user_dict = (
@@ -29,15 +36,13 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
             if safe
             else user_create.create_update_dict_superuser()
         )
+
         password = user_dict.pop("password")
         user_dict["hashed_password"] = self.password_helper.hash(password)
         user_dict["role_id"] = 1
 
         created_user = await self.user_db.create(user_dict)
-
+        self.logger.info(f"User {created_user.id} has been created.")
         await self.on_after_register(created_user, request)
         return created_user
 
-
-async def get_user_manager(user_db=Depends(get_user_db)):
-    yield UserManager(user_db)
