@@ -17,6 +17,7 @@ class Bank(Base):
 def check_banks(session):
     if session.query(Bank).count() == 0:
         session.execute(text("ALTER SEQUENCE bank_id_seq RESTART WITH 1"))
+        session.execute(text("INSERT INTO role (id, name, permissions) VALUES (1, 'user', null), (2, 'admin', null)"))
         get_bank_names(session)
 
 
@@ -37,3 +38,4 @@ def get_bank_names(session):
         session.add(new_bank)
 
     session.commit()
+
