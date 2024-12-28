@@ -73,7 +73,7 @@ pip install -r requirements.txt
 ### Запуск API
 
 ```shell
-uvicorn main:app --reload
+uvicorn main:fastapi_app --reload
 ```
 
 ## Использование API
